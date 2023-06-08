@@ -83,98 +83,106 @@ class _ResultViewState extends ConsumerState<ResultView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Student Marksheet'),
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.cyan,
       ),
       body: Padding(
         padding: const EdgeInsets.all(30.0),
-        child: Column(
-          children: [
-            TextFormField(
-              controller: firstNameController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Enter firstname',
-              ),
-            ),
-            const SizedBox(height: 10),
-            TextFormField(
-              controller: lastNameController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Enter lastname',
-              ),
-            ),
-            const SizedBox(height: 10),
-            DropdownButtonFormField<String>(
-              validator: (text) {
-                if (text == null || text.isEmpty) {
-                  return 'Please select a batch';
-                }
-                return null;
-              },
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                focusedBorder: const OutlineInputBorder(
-                  borderSide: BorderSide(width: 1, color: Colors.green),
-                ),
-                labelText: 'Select Module',
-              ),
-              onChanged: (newValue) {
-                setState(() {
-                  selectedModule = [newValue!];
-                });
-              },
-              items: moduleList.map<DropdownMenuItem<String>>(
-                (String module) {
-                  return DropdownMenuItem<String>(
-                    value: module,
-                    child: Text(
-                      module,
-                      style: const TextStyle(fontSize: 15),
-                    ),
-                  );
-                },
-              ).toList(),
-            ),
-            const SizedBox(height: 10),
-            TextFormField(
-              controller: marksController,
-              decoration: const InputDecoration(
-                hintText: 'Enter Marks',
-                border: OutlineInputBorder(), // Add a border around the field
-                // You can also customize other decoration options here
-              ),
-            ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green, // background // rounded corners
-              ),
-              onPressed: () {
-                Result result = Result(
-                  firstname: firstNameController.text.trim(),
-                  lastname: lastNameController.text.trim(),
-                  marks: marksController.text.trim().split(','),
-                  module: selectedModule,
-                );
-
-                ref.read(resultViewModelProvider.notifier).addResult(result);
-
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Marks added'),
+        child: Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: firstNameController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Enter firstname',
                   ),
-                );
-              },
-              child: const Text('Add'),
-            ),
-            const SizedBox(height: 10),
-            if (dataTableRows.isNotEmpty)
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  controller: lastNameController,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Enter lastname',
+                  ),
+                ),
+                const SizedBox(height: 10),
+                DropdownButtonFormField<String>(
+                  validator: (text) {
+                    if (text == null || text.isEmpty) {
+                      return 'Please select a batch';
+                    }
+                    return null;
+                  },
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    focusedBorder: const OutlineInputBorder(
+                      borderSide: BorderSide(width: 1, color: Colors.cyan),
+                    ),
+                    labelText: 'Select Module',
+                  ),
+                  onChanged: (newValue) {
+                    setState(() {
+                      selectedModule = [newValue!];
+                    });
+                  },
+                  items: moduleList.map<DropdownMenuItem<String>>(
+                    (String module) {
+                      return DropdownMenuItem<String>(
+                        value: module,
+                        child: Text(
+                          module,
+                          style: const TextStyle(fontSize: 15),
+                        ),
+                      );
+                    },
+                  ).toList(),
+                ),
+                const SizedBox(height: 10),
+                TextFormField(
+                  controller: marksController,
+                  decoration: const InputDecoration(
+                    hintText: 'Enter Marks',
+                    border:
+                        OutlineInputBorder(), // Add a border around the field
+                    // You can also customize other decoration options here
+                  ),
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: double.infinity,
+                  height: 40,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          Colors.cyan, // background // rounded corners
+                    ),
+                    onPressed: () {
+                      Result result = Result(
+                        firstname: firstNameController.text.trim(),
+                        lastname: lastNameController.text.trim(),
+                        marks: marksController.text.trim().split(','),
+                        module: selectedModule,
+                      );
+
+                      ref
+                          .read(resultViewModelProvider.notifier)
+                          .addResult(result);
+
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Marks added'),
+                        ),
+                      );
+                    },
+                    child: const Text('Add'),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                if (dataTableRows.isNotEmpty)
+                  Column(
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -200,27 +208,27 @@ class _ResultViewState extends ConsumerState<ResultView> {
                       ),
                     ],
                   ),
+                if (dataTableRows.isEmpty)
+                  const Text(
+                    'Data chaina',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                const SizedBox(height: 16),
+                Text(
+                  'Total Marks: ${getTotalMarks()}',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
-              ),
-            if (dataTableRows.isEmpty)
-              const Text(
-                'Data chaina',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-            const SizedBox(height: 16),
-            Text(
-              'Total Marks: ${getTotalMarks()}',
-              style: const TextStyle(fontWeight: FontWeight.bold),
+                Text(
+                  'Result: ${getResult()}',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(
+                  'Division: ${getDivision()}',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
             ),
-            Text(
-              'Result: ${getResult()}',
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-            Text(
-              'Division: ${getDivision()}',
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ],
+          ),
         ),
       ),
     );
