@@ -1,12 +1,24 @@
 import '../model/student.dart';
 
 class ResultUtils {
-  static int getTotalMarks(List<Result> results, String firstName, String lastName) {
+  static int getTotalMarks(
+      List<Result> results, String firstName, String lastName) {
     int total = 0;
     for (Result result in results) {
-      if (result.firstname == firstName.trim() && result.lastname == lastName.trim()) {
+      if (result.firstname == firstName.trim() &&
+          result.lastname == lastName.trim()) {
+        bool hasFailedModule = false;
         for (String mark in result.marks!) {
-          total += int.tryParse(mark) ?? 0;
+          int markValue = int.tryParse(mark) ?? 0;
+          total += markValue;
+
+          if (markValue < 40) {
+            hasFailedModule = true;
+          }
+        }
+
+        if (hasFailedModule) {
+          return -1;
         }
       }
     }
